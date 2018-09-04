@@ -2,13 +2,13 @@
 Author:- Arjun Shome
 Description :- Fetch Security Question Stored procedure Script for Divya Urbania
 */
-ALTER PROCEDURE USP_DU_FetchSecurityVerificationQuestion
+CREATE PROCEDURE USP_DU_FetchSecurityVerificationQuestionAnswer
 @id NVARCHAR(50), @question NVARCHAR(100) OUT, @deactivated NVARCHAR(10) OUT, @Error NVARCHAR(200) OUT
 AS
 BEGIN	
 	IF EXISTS(SELECT * FROM dbo.DU_Login WHERE LoginEmail = @id AND Active = 1)
 	BEGIN
-		SELECT @question = que.SecurityQuestions 
+		SELECT @question = que.SecurityQuestions+','+LSG.Answer 
 		FROM dbo.DU_Login LG WITH (NOLOCK)
 		INNER JOIN dbo.DU_Tenant_Login TLG WITH (NOLOCK)
 			ON LG.LoginID = TLG.LoginID
@@ -41,5 +41,5 @@ BEGIN
 END
 
 DECLARE @qttext NVARCHAR(100), @inactive NVARCHAR(10), @err NVARCHAR(200)
-EXECUTE USP_DU_FetchSecurityVerificationQuestion 'arjunshome111@gmail.com',@qttext output, @inactive output, @err output
+EXECUTE USP_DU_FetchSecurityVerificationQuestionAnswer 'arjunshome111@gmail.com',@qttext output, @inactive output, @err output
 SELECT ISNULL(@qttext,'')+','+ISNULL(@inactive,'')+','+ISNULL(@err,'')
