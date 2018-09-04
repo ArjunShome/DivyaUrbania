@@ -8,13 +8,13 @@ CREATE PROCEDURE USP_DU_Tenant_Login
 @message NVARCHAR(100) OUT
 AS
 BEGIN
-	IF EXISTS(SELECT * FROM dbo.DU_Login WHERE LoginEmail = @id AND LoginPassword = @PASSWD)
+	IF EXISTS(SELECT * FROM dbo.DU_Login WHERE LoginEmail = @id AND LoginPassword = @PASSWD AND Active = 1)
 	BEGIN
 		SELECT @message = 'Successfully Logged IN'
 	END
 	ELSE
 	BEGIN
-		IF EXISTS(SELECT * FROM dbo.DU_Login WHERE LoginEmail = @id AND LoginPassword <> @PASSWD)
+		IF EXISTS(SELECT * FROM dbo.DU_Login WHERE LoginEmail = @id AND LoginPassword <> @PASSWD AND Active = 1)
 		BEGIN
 			SET @message = 'Invalid Password'		
 		END
