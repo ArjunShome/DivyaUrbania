@@ -1,0 +1,60 @@
+Develop the Login page:-
+
+Keeping into consideration that the database is setup for the login page to work.
+Testing should be done on real time scenarios.
+
+Tables Required:-
+	DU_Tenant:
+		1. TenantID
+		2. TenantLoginID
+		3. TenantSecurityID
+		3. CreateDate
+		4. UpdateDate
+		5. Active
+	DU_Tenant_Profile:
+		1. TenantProfileID
+		2. TenantID
+		3. FirstName
+		4. MiddleName
+		5. LastName
+		6. EmailId
+		7. Image
+		8. Gender
+		9. PhoneNumber
+		10. Organisation
+		11. Birthdate
+		12. CreateDate
+		13. UpdateDate
+		14. Active
+	DU_Login:
+		1. LoginID
+		2. LoginEmail
+		3. LoginPassword
+		4. OldLoginPassword
+		5. LastLoginTime
+		6. CreateDate
+		7. UpdateDate
+		8. Active
+	DU_Tenant_Login:
+		1. TenantLoginID
+		2. LoginID
+		3. TenantLoginSecurityID
+		4. CreatDate
+		5. UpdateDate
+		6. Active
+	DU_Tenant_Login_Security:
+		1. TenantLoginSecuriyID
+		2. SecurityQuestion
+		3. Answer
+		4. CreateDate
+		5. UpdateDate
+		6. Active
+	DU_Change_History:
+		1. UpdateID
+		2. UpdateTable
+		3. UpdateText
+		4. UpdateUser
+		5. UpdateDate
+		
+
+Status :- INCOMPLETE.
