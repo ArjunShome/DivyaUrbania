@@ -2,7 +2,7 @@
 Author:- Arjun
 Description:- Procedure to Sign In a User to the Application
 */
-CREATE PROCEDURE USP_DU_SignInUser
+ALTER PROCEDURE USP_DU_SignInUser
 @id NVARCHAR(100),
 @loginEmail NVARCHAR(100),
 @passwd NVARCHAR(100),
@@ -15,12 +15,12 @@ CREATE PROCEDURE USP_DU_SignInUser
 @securityQuestionID INT,
 @securityAnswer NVARCHAR(100),
 @img VARBINARY,
-@gender NVARCHAR(1)
+@gender NVARCHAR(1),
+@message NVARCHAR(200) OUTPUT
 AS
 BEGIN
 SET NOCOUNT ON
-	BEGIN
-
+BEGIN TRY
 	IF OBJECT_ID('tempdb..#Records') IS NOT NULL
     DROP TABLE #Records
 
@@ -66,9 +66,10 @@ SET NOCOUNT ON
 		ON TP.EmailID = REC.id
 		AND TP.Active = 1
 
+	BEGIN TRANSACTION
 	--INSERT INTO DU_LOGIN TABLE
-	INSERT INTO DU_Login(LoginEmail,LoginPassword,CreateDate,Active)
-	SELECT REC.loginEmail,REC.passwd,GETDATE(),1
+	INSERT INTO DU_Login(LoginEmail,LoginPassword,LastLoginTime,CreateDate,Active)
+	SELECT REC.loginEmail,REC.passwd,'',GETDATE(),1
 	FROM #Records REC 
 	LEFT JOIN DU_Login LG
 		ON REC.loginEmail = LG.LoginEmail
@@ -81,6 +82,7 @@ SET NOCOUNT ON
 		ON LG.LoginEmail = REC.loginEmail
 		AND Active = 1
 
+	BEGIN TRANSACTION
 	-- INSERT INTO DU_TENANT_LOGIN
 	INSERT INTO DU_Tenant_Login(LoginID,CreateDate,Active)
 	SELECT @LoginID,GETDATE(),1
@@ -88,26 +90,45 @@ SET NOCOUNT ON
 	SELECT @TenantLoginID = LoginID
 	FROM DU_Tenant_Login WHERE LoginID = @LoginID
 
+	BEGIN TRANSACTION
 	-- INSERT INTO DU_TENANT
 	INSERT INTO DU_Tenant(TenantLoginID,TenantProfileID,CreateDate,Active)
 	SELECT @TenantLoginID,@TenantProfileID,GETDATE(),1
 
+	BEGIN TRANSACTION
 	-- INSERT INTO DU_Tenant_Login_Security_Answers
 	INSERT INTO DU_Tenant_Login_Security_Answers(TenantLoginSecurityQuestionID,TenantLoginID,Answer,CreateDate,Active)
 	SELECT securityQuestionID,@TenantLoginID,securityAnswer,GETDATE(),1
 	FROM #Records
 
-	IF @@ROWCOUNT = 5 AND @@ERROR = 0
+	IF @@TRANCOUNT = 5 AND @@ERROR = 0
 	BEGIN
 		COMMIT
+		IF @@ROWCOUNT = 5
+		BEGIN
+			SET @message = 'THANKS '+@firstName+' FOR SIGNING UP.. :)'
+		END
+		ELSE
+		BEGIN
+			ROLLBACK
+			SET @message = 'THERE WAS SOME PROBLEM SIGNING YOU IN '+@firstName+' PLEASE CONTACT THE SUPPORT FOR HELP'
+		END
 	END
 	ELSE
 	BEGIN
 		ROLLBACK
+		SET @message = 'THERE WAS SOME PROBLEM SIGNING YOU IN '+@firstName+' PLEASE CONTACT THE SUPPORT FOR HELP'
 	END
 
 	IF OBJECT_ID('tempdb..#Records') IS NOT NULL
     DROP TABLE #Records
-
-	END
+END TRY 
+BEGIN CATCH
+	ROLLBACK
+	SET @message = 'THERE WAS SOME PROBLEM SIGNING YOU IN, '+@firstName+'. PLEASE CONTACT THE SUPPORT FOR HELP'
+END CATCH
 END
+
+DECLARE @msg NVARCHAR(100)
+EXECUTE USP_DU_SignInUser 'laltushome111@gmail.com','laltushome111@gmail.com','12345678','Laltu','','Shome','CES ltd','1992-11-16','9831153673','100','Barrackpore',0x,'M',@msg OUTPUT
+SELECT @msg
