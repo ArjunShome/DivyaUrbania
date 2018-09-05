@@ -1,7 +1,7 @@
 USE [CES_Practice]
 GO
 
-/****** Object:  Table [dbo].[DU_Tenant_Login_Security_Answers]    Script Date: 04-09-2018 17:06:36 ******/
+/****** Object:  Table [dbo].[DU_Tenant_Login_Security_Answers]    Script Date: 05-09-2018 20:05:17 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,6 +10,7 @@ GO
 
 CREATE TABLE [dbo].[DU_Tenant_Login_Security_Answers](
 	[TenantLoginSecurityAnswerID] [int] IDENTITY(100,1) NOT NULL,
+	[TenantLoginID] [int] NOT NULL,
 	[TenantLoginSecurityQuestionID] [int] NOT NULL,
 	[Answer] [nvarchar](200) NOT NULL,
 	[CreateDate] [datetime] NOT NULL,
@@ -20,6 +21,13 @@ CREATE TABLE [dbo].[DU_Tenant_Login_Security_Answers](
 	[TenantLoginSecurityAnswerID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[DU_Tenant_Login_Security_Answers]  WITH CHECK ADD  CONSTRAINT [FK_DU_Tenant_Login_Security_Answers_DU_Tenant_Login] FOREIGN KEY([TenantLoginID])
+REFERENCES [dbo].[DU_Tenant_Login] ([TenantLoginID])
+GO
+
+ALTER TABLE [dbo].[DU_Tenant_Login_Security_Answers] CHECK CONSTRAINT [FK_DU_Tenant_Login_Security_Answers_DU_Tenant_Login]
 GO
 
 ALTER TABLE [dbo].[DU_Tenant_Login_Security_Answers]  WITH CHECK ADD  CONSTRAINT [FK_DU_TenantSecurityQuestion_DU_TenantSecurityAnswer] FOREIGN KEY([TenantLoginSecurityQuestionID])
