@@ -33,9 +33,10 @@ GETDATE(),
 )
 
 
-INSERT INTO dbo.DU_Tenant_Login_Security_Answers(TenantLoginSecurityQuestionID,Answer,CreateDate,Active)
+INSERT INTO dbo.DU_Tenant_Login_Security_Answers(TenantLoginSecurityQuestionID,TenantLoginID,Answer,CreateDate,Active)
 VALUES
 (
+100,
 100,
 'Kolkata',
 GETDATE(),
@@ -69,3 +70,4 @@ SELECT * FROM dbo.DU_Tenant
 SELECT * FROM DU_Tenant_Login
 SELECT * FROM dbo.DU_Tenant_Login_Security_Questions
 SELECT * FROM dbo.DU_Tenant_Login_Security_Answers
+
