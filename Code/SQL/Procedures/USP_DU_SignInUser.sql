@@ -8,7 +8,7 @@ ALTER PROCEDURE USP_DU_SignInUser
 @passwd NVARCHAR(100),
 @firstName NVARCHAR(100),
 @middleName NVARCHAR(100),
-@lastName NVARCHAR(100),
+@lastName NVARCHAR(100) ,
 @organisation NVARCHAR(100),
 @dateOfBirth DATE,
 @phoneNumber NVARCHAR(10),
@@ -59,6 +59,16 @@ BEGIN TRY
 		AND REC.phoneNumber = TP.PhoneNumber
 		AND TP.Active = 1
 	WHERE TP.TenantProfileID IS NULL
+	IF @@TRANCOUNT = 1 AND @@ERROR = 0
+	BEGIN
+		SET @message = 'Success'
+		COMMIT
+	END
+	ELSE 
+	BEGIN
+		ROLLBACK
+		SET @message = 'Error'
+	END
 
 	SELECT @TenantProfileID = TenantProfileID 
 	FROM #Records Rec
@@ -75,6 +85,16 @@ BEGIN TRY
 		ON REC.loginEmail = LG.LoginEmail
 		AND REC.passwd = LG.LoginPassword
 	WHERE LG.LoginID IS NULL
+	IF @@TRANCOUNT = 1 AND @@ERROR = 0
+	BEGIN
+		SET @message = 'Success'
+		COMMIT
+	END
+	ELSE 
+	BEGIN
+		ROLLBACK
+		SET @message = 'Error'
+	END
 
 	SELECT @LoginID = LG.LoginID
 	FROM DU_Login LG 
@@ -86,6 +106,16 @@ BEGIN TRY
 	-- INSERT INTO DU_TENANT_LOGIN
 	INSERT INTO DU_Tenant_Login(LoginID,CreateDate,Active)
 	SELECT @LoginID,GETDATE(),1
+	IF @@TRANCOUNT = 1 AND @@ERROR = 0
+	BEGIN
+		SET @message = 'Success'
+		COMMIT
+	END
+	ELSE 
+	BEGIN
+		ROLLBACK
+		SET @message = 'Error'
+	END
 
 	SELECT @TenantLoginID = LoginID
 	FROM DU_Tenant_Login WHERE LoginID = @LoginID
@@ -94,29 +124,39 @@ BEGIN TRY
 	-- INSERT INTO DU_TENANT
 	INSERT INTO DU_Tenant(TenantLoginID,TenantProfileID,CreateDate,Active)
 	SELECT @TenantLoginID,@TenantProfileID,GETDATE(),1
+	IF @@TRANCOUNT = 1 AND @@ERROR = 0
+	BEGIN
+		SET @message = 'Success'
+		COMMIT
+	END
+	ELSE 
+	BEGIN
+		ROLLBACK
+		SET @message = 'Error'
+	END
 
 	BEGIN TRANSACTION
 	-- INSERT INTO DU_Tenant_Login_Security_Answers
 	INSERT INTO DU_Tenant_Login_Security_Answers(TenantLoginSecurityQuestionID,TenantLoginID,Answer,CreateDate,Active)
 	SELECT securityQuestionID,@TenantLoginID,securityAnswer,GETDATE(),1
 	FROM #Records
-
-	IF @@TRANCOUNT = 5 AND @@ERROR = 0
+	IF @@TRANCOUNT = 1 AND @@ERROR = 0
 	BEGIN
+		SET @message = 'Success'
 		COMMIT
-		IF @@ROWCOUNT = 5
-		BEGIN
-			SET @message = 'THANKS '+@firstName+' FOR SIGNING UP.. :)'
-		END
-		ELSE
-		BEGIN
-			ROLLBACK
-			SET @message = 'THERE WAS SOME PROBLEM SIGNING YOU IN '+@firstName+' PLEASE CONTACT THE SUPPORT FOR HELP'
-		END
+	END
+	ELSE 
+	BEGIN
+		ROLLBACK
+		SET @message = 'Error'
+	END
+
+	IF @message = 'Success'
+	BEGIN
+		SET @message = 'THANKS '+@firstName+' FOR SIGNING UP.. :)'
 	END
 	ELSE
 	BEGIN
-		ROLLBACK
 		SET @message = 'THERE WAS SOME PROBLEM SIGNING YOU IN '+@firstName+' PLEASE CONTACT THE SUPPORT FOR HELP'
 	END
 
@@ -130,5 +170,5 @@ END CATCH
 END
 
 DECLARE @msg NVARCHAR(100)
-EXECUTE USP_DU_SignInUser 'laltushome111@gmail.com','laltushome111@gmail.com','12345678','Laltu','','Shome','CES ltd','1992-11-16','9831153673','100','Barrackpore',0x,'M',@msg OUTPUT
+EXECUTE USP_DU_SignInUser 'laltushome111@gmail.com','laltushome111@gmail.com','12345678','Laltu','','Shome','CES ltd','1992-11-16','9831153673',100,'Barrackpore',0x,'M',@msg OUTPUT
 SELECT @msg
