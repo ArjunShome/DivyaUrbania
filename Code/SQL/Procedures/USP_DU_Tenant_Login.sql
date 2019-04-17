@@ -3,7 +3,7 @@ Author:- Arjun Shome
 Description :- Login Stored procedure Script for Divya Urbania
 */
 GO
-ALTER PROCEDURE USP_DU_Tenant_Login
+CREATE PROCEDURE USP_DU_Tenant_Login
 @id nvarchar(50), @PASSWD nvarchar(50), 
 @message NVARCHAR(100) OUT
 AS
@@ -38,7 +38,3 @@ BEGIN
 	END
 END
 GO
-
-DECLARE @message NVARCHAR(100)
-EXECUTE USP_DU_Tenant_Login 'arjunshome111@gmail.com','Arjunrama@829080',@message output
-PRINT @message

@@ -1,4 +1,4 @@
-USE [CES_Practice]
+USE [DivyaUrbania]
 GO
 
 /****** Object:  Table [dbo].[DU_Update_History]    Script Date: 04-09-2018 16:34:18 ******/
