@@ -1,4 +1,4 @@
-USE [CES_Practice]
+USE [DivyaUrbania]
 GO
 
 /****** Object:  Table [dbo].[DU_Tenant]    Script Date: 04-09-2018 17:06:29 ******/

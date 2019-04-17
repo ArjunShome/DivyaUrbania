@@ -1,4 +1,4 @@
-USE CES_Practice
+USE DivyaUrbania
 
 INSERT INTO dbo.DU_Tenant_Profile(EmailID,FirstName,LastName,Birthdate,CreateDate,Active,Gender,Organisation,PhoneNumber)
 VALUES
@@ -44,10 +44,9 @@ GETDATE(),
 )
 
 
-INSERT INTO DU_Tenant_Login(LoginID,TenantLoginSecurityAnswerID,CreateDate,Active)
+INSERT INTO DU_Tenant_Login(LoginID,CreateDate,Active)
 VALUES
 (
-100,
 100,
 GETDATE(),
 1

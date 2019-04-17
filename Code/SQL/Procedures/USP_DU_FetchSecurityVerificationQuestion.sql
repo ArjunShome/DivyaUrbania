@@ -15,7 +15,7 @@ BEGIN
 			AND LG.Active = 1
 			AND TLG.Active = 1
 		INNER JOIN dbo.DU_Tenant_Login_Security_Answers LSG WITH (NOLOCK)
-			ON LSG.TenantLoginSecurityAnswerID = TLG.TenantLoginSecurityAnswerID
+			ON LSG.TenantLoginID = TLG.TenantLoginID
 			AND LSG.Active = 1 
 		INNER JOIN dbo.DU_Tenant_Login_Security_Questions que WITH (NOLOCK)
 			ON que.TenantLoginSecurityQuestionsID = LSG.TenantLoginSecurityQuestionID
@@ -39,7 +39,3 @@ BEGIN
 	IF @question IS NOT NULL AND @Error IS NULL
 		SET @deactivated = 'NO'
 END
-
-DECLARE @qttext NVARCHAR(100), @inactive NVARCHAR(10), @err NVARCHAR(200)
-EXECUTE USP_DU_FetchSecurityVerificationQuestionAnswer 'arjunshome111@gmail.com',@qttext output, @inactive output, @err output
-SELECT ISNULL(@qttext,'')+','+ISNULL(@inactive,'')+','+ISNULL(@err,'')

@@ -2,7 +2,7 @@
 Author:- Arjun Shome
 Description :- Stored procedure Script to reset the Login Password for Divya Urbania.
 */
-ALTER PROCEDURE USP_DU_ResetPassword
+CREATE PROCEDURE USP_DU_ResetPassword
 @id NVARCHAR(100), @passwd NVARCHAR(100), @message NVARCHAR(100) OUTPUT
 AS
 BEGIN
