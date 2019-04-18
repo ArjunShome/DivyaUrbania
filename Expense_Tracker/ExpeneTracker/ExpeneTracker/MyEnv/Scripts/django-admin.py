@@ -1,4 +1,4 @@
-#!E:\MY LEARNING\Expense_Tracker\ExpeneTracker\ExpeneTracker\MyEnv\Scripts\python.exe
+#!e:\my learning\expense_tracker\expenetracker\expenetracker\myenv\scripts\python.exe
 from django.core import management
 
 if __name__ == "__main__":
