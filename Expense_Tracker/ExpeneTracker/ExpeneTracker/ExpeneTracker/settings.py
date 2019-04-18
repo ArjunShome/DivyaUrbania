@@ -57,7 +57,7 @@ ROOT_URLCONF = 'ExpeneTracker.urls'
 
 TEMPLATES = [
 	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		#'BACKEND': 'django.template.backends.django.DjangoTemplates',
 		'DIRS': [],
 		'APP_DIRS': True,
 		'OPTIONS': {
@@ -79,11 +79,15 @@ WSGI_APPLICATION = 'ExpeneTracker.wsgi.application'
 
 DATABASES = {
 	'default':{
+		'ENGINE': 'sql_server.pyodbc',
 		'NAME': 'DivyaUrbania',
-		'ENGINE': 'sqlserver_ado',
-		'HOST': 'localhost',#'dbserver\\ss2008', 
+		'HOST': 'DESKTOP-RLTI3FK\ARJUNDU',
 		'USER': '',
 		'PASSWORD': '',
+		
+		'OPTIONS': {
+			'driver': "ODBC Driver 13 for SQL Server"
+		},
 	}
 }
 
